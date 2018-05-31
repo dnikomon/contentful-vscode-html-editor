@@ -9,7 +9,7 @@ This UI extension for contentful allows the use of the excellent 'Monaco' editor
 ### 1) Setup the hosting via GitHub Pages
 1) Clone / Fork this repo
 2) If forked, under GitHub, go to Repo Settings -> "GitHub Pages"
-3) Set to "Source" as "Master Branch /docs Folder"
+3) Set to "Source" as "Master Branch Folder"
 
 ### 2) Setup the Extension
 1) In contentful, go to "Space Settings" -> "Extensions"
