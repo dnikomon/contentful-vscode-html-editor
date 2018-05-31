@@ -1,0 +1,6 @@
+{
+  "name": "B&W VSCode HTML Editor",
+  "id": "bw-contentful-vscode-html-editor",
+  "fieldTypes": ["Text"],
+  "srcdoc": "./index.html"
+}
