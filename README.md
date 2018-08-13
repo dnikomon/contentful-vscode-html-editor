@@ -25,3 +25,5 @@ This UI extension for contentful allows the use of the excellent 'Monaco' editor
 3) Select the "VS Code Monaco" (or the name you set in step 2 above)
 4) Enjoy!
 
+### Development
+1) Go to repo - then run `python -m SimpleHTTPServer 8000` to start a simple http server

@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
-  <title>UI-Extension Country Select</title>
+  <title>UI-Extension VS Code Editor</title>
   <!-- load Contentful stylesheet to have some base styles -->
   <link rel="stylesheet" href="https://contentful.github.io/ui-extensions-sdk/cf-extension.css">
   <!-- load Contentful extensions SDK -->
@@ -32,33 +32,45 @@
 
     var editor = null;
 
+
+    createEditor = function(elementId, initialValue, onTextBlur) {
+      var elementDom = document.getElementById('editor');
+      elementDom.style.width = window.innerWidth;
+
+      editor = monaco.editor.create(elementDom, {
+        model: monaco.editor.createModel(initialValue, 'text/html'),
+        autoIndent: true,
+        formatOnPaste: true,
+        formatOnType: true,
+        theme: 'vs-light',
+        minimap: {
+          enabled: false
+        },
+        wordWrap: 'on',
+        wrappingIndent: 'same' // try "same", "indent" or "none"
+      });
+      editor.layout();
+
+      /**
+      * On blur editor
+      */
+      editor.onDidBlurEditorText(() => {
+        onTextBlur(editor.getValue());
+      });
+    };
+
+
     /**
      * Init the contentful extension
      */
     window.contentfulExtension.init(extension => {
       var value = extension.field.getValue();
 
-      var elementDom = document.getElementById('editor');
-      elementDom.style.width = window.innerWidth;
-
-      editor = monaco.editor.create(elementDom, {
-        model: monaco.editor.createModel(value, 'text/html'),
-        autoIndent: true,
-        formatOnPaste: true,
-        formatOnType: true,
-        theme: 'vs-light'
-      });
-      editor.layout();
-
-      /**
-       * On blur editor
-       */
-      editor.onDidBlurEditor(function () {
-        extension.field.setValue(editor.getValue());
+      createEditor('editor',value, (updatedValue) => {
+         extension.field.setValue(updatedValue);
       });
 
       extension.window.updateHeight(400);
-
     });
   </script>
 
