@@ -1,0 +1,26 @@
+{
+  "name": "contentful-vscode-html-editor",
+  "version": "1.0.0",
+  "description": "This UI extension for contentful allows the use of the excellent 'Monaco' editor (From VSCode) in their content types.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "http-server ./",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BloomAndWild/contentful-vscode-html-editor.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BloomAndWild/contentful-vscode-html-editor/issues"
+  },
+  "homepage": "https://github.com/BloomAndWild/contentful-vscode-html-editor#readme",
+  "dependencies": {
+    "monaco-editor": "^0.19.2"
+  },
+  "devDependencies": {
+    "http-server": "^0.12.0"
+  }
+}

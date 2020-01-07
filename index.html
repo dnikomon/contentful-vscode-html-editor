@@ -1,79 +1,75 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- load Contentful stylesheet to have some base styles -->
+    <link
+      rel="stylesheet"
+      href="https://contentful.github.io/ui-extensions-sdk/cf-extension.css"
+    />
+    <!-- load Contentful extensions SDK -->
+    <script src="https://contentful.github.io/ui-extensions-sdk/cf-extension-api.js"></script>
 
-<head>
-  <meta charset="UTF-8" />
-  <title>UI-Extension VS Code Editor</title>
-  <!-- load Contentful stylesheet to have some base styles -->
-  <link rel="stylesheet" href="https://contentful.github.io/ui-extensions-sdk/cf-extension.css">
-  <!-- load Contentful extensions SDK -->
-  <script src="https://contentful.github.io/ui-extensions-sdk/cf-extension-api.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <style>
+      body,
+      html {
+        padding: 0px;
+        margin: 0px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="editor" style="height:400px; width: 100%"></div>
 
-  <!-- Extension -->
-  <link data-name="vs/editor/editor.main" rel="stylesheet" href="  https://microsoft.github.io/monaco-editor/node_modules/monaco-editor/min/vs/editor/editor.main.css">
+    <!-- OR ANY OTHER AMD LOADER HERE INSTEAD OF loader.js -->
+    <script src="vs/loader.js"></script>
+    <script>
+      /**
+       * Create the VS Code editor
+       */
+      var createEditor = function(elementId, initialValue, onTextBlur) {
+        require.config({ paths: { vs: "vs" } });
+        require(["vs/editor/editor.main"], function() {
+          var elementDom = document.getElementById("editor");
+          elementDom.style.width = window.innerWidth;
 
-  <!-- VS Code Editor -->
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js" integrity="sha256-wS9gmOZBqsqWxgIVgA8Y9WcQOa7PgSIX+rPA0VL2rbQ="
-    crossorigin="anonymous"></script>
-  <script>var require = { paths: { 'vs': 'vs' } };</script>
-  <script src="https://microsoft.github.io/monaco-editor/node_modules/monaco-editor/min/vs/loader.js"></script>
-  <script src="https://microsoft.github.io/monaco-editor/node_modules/monaco-editor/min/vs/editor/editor.main.nls.js"></script>
-  <script src="https://microsoft.github.io/monaco-editor/node_modules/monaco-editor/min/vs/editor/editor.main.js"></script>
-  <style>
-    body,html {padding: 0px; margin: 0px;}
-  </style>
-</head>
+          var editor = monaco.editor.create(elementDom, {
+            model: monaco.editor.createModel(initialValue, "text/html"),
+            autoIndent: true,
+            formatOnPaste: true,
+            formatOnType: true,
+            theme: "vs-light",
+            minimap: {
+              enabled: false
+            },
+            wordWrap: "on",
+            wrappingIndent: "same" // try "same", "indent" or "none"
+          });
+          editor.layout();
 
-<body>
-  <!-- your UI extension code -->
-  <div id="editor" style="height:400px; width: 100%"></div>
-
-  <script type="text/javascript">
-
-    var editor = null;
-
-
-    createEditor = function(elementId, initialValue, onTextBlur) {
-      var elementDom = document.getElementById('editor');
-      elementDom.style.width = window.innerWidth;
-
-      editor = monaco.editor.create(elementDom, {
-        model: monaco.editor.createModel(initialValue, 'text/html'),
-        autoIndent: true,
-        formatOnPaste: true,
-        formatOnType: true,
-        theme: 'vs-light',
-        minimap: {
-          enabled: false
-        },
-        wordWrap: 'on',
-        wrappingIndent: 'same' // try "same", "indent" or "none"
-      });
-      editor.layout();
+          /**
+           * On blur editor
+           */
+          editor.onDidBlurEditorText(() => {
+            onTextBlur(editor.getValue());
+          });
+        });
+      };
 
       /**
-      * On blur editor
-      */
-      editor.onDidBlurEditorText(() => {
-        onTextBlur(editor.getValue());
+       * On init, populate the VSCode editor
+       */
+      window.contentfulExtension.init(extension => {
+        var value = extension.field.getValue();
+
+        createEditor("editor", value, updatedValue => {
+          extension.field.setValue(updatedValue);
+        });
+
+        extension.window.updateHeight(400);
       });
-    };
-
-
-    /**
-     * Init the contentful extension
-     */
-    window.contentfulExtension.init(extension => {
-      var value = extension.field.getValue();
-
-      createEditor('editor',value, (updatedValue) => {
-         extension.field.setValue(updatedValue);
-      });
-
-      extension.window.updateHeight(400);
-    });
-  </script>
-
-</body>
-
+    </script>
+  </body>
 </html>
